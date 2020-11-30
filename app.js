@@ -3,5 +3,8 @@
  const    app    =  express();
  
  app.use('/',social);
+ app.get('/',(req,res)=>{
+   return res.send('We Are Connected');
+ });
 
  module.exports = app;
