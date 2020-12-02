@@ -1,5 +1,5 @@
- const  router   =  require('express').Router();
- const  request  =  require('request');
+ const  router   =   require('express').Router();
+ const  axios    =   require('axios');
 
 
  //ــــــــــــــF A C E B O O K   A U T H E T I C A T I O Nــــــــــ
@@ -8,9 +8,8 @@
 
    try{        
      let {fb_token}  =  req.body;
-     console.log(fb_token);
 
-     let is_exist = await request.get(`https://graph.facebook.com/me?access_token=${fb_token}&fields=id,first_name,last_name,email`); 
+     let is_exist = await axios.get(`https://graph.facebook.com/me?access_token=${fb_token}&fields=id,first_name,last_name,email`); 
      if(!is_exist) return res.status(400).send({msg:'facebook token is not valid' , data:null , status: 400});
 
      console.log(is_exist.data);
@@ -23,9 +22,7 @@
  });
 
  
-
-
-
+ 
  // ــــــــــــــــــــG O O G L E   A U T H E N T I C A T I O N ـــــــــــــ
 
   router.post('/google', async(req,res)=>{
@@ -34,10 +31,10 @@
    
     let {google_token}  =  req.body;
 
-    let is_exist = await request.get(`https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${google_token}`); 
+    let is_exist = await axios.get(`https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${google_token}`); 
     if(!is_exist) return res.status(400).send({msg:'google token is not valid' , data:null , status: 400});
     
-    console.log(is_exist);
+    console.log(is_exist.data);
     return res.send({msg:'successfully connected'});
     
    }catch(err){
