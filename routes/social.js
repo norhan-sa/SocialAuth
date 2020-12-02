@@ -31,7 +31,7 @@
    
     let {google_token}  =  req.body;
 
-    let is_exist = await axios.get(`https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=${google_token}`); 
+    let is_exist = await axios.get(`https://www.googleapis.com/oauth2/v1/tokeninfo?id_token=${google_token}`); 
     if(!is_exist) return res.status(400).send({msg:'google token is not valid' , data:null , status: 400});
     
     console.log(is_exist.data);
