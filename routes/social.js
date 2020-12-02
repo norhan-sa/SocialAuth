@@ -9,7 +9,7 @@
    try{        
      let {fb_token}  =  req.body;
 
-     let is_exist = await request.get(`https://graph.facebook.com/me?access_token=${fb_token}?fields=id,first_name,last_name,email`); 
+     let is_exist = await request.get(`https://graph.facebook.com/me?access_token=${fb_token}&fields=id,first_name,last_name,email`); 
      if(!is_exist) return res.status(400).send({msg:'facebook token is not valid' , data:null , status: 400});
 
      console.log(is_exist.data);
