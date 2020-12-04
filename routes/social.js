@@ -64,8 +64,8 @@
     console.log(is_exist); 
 
     let email = is_exist.email? is_exist.email : req.body.email;
-    let firstname = is_exist.first_name? is_exist.first_name : req.body.first_name;
-    let lastname = is_exist.last_name? is_exist.last_name : req.body.last_name;
+    let firstname = is_exist.first_name? is_exist.given_name : req.body.first_name;
+    let lastname = is_exist.last_name? is_exist.family_name : req.body.last_name;
     let picture = is_exist.picture? is_exist.picture : null;
     let google_id = is_exist.id;
 
