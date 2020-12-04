@@ -6,7 +6,10 @@
       
      nsp.on('connection',function(socket){
          console.log(`user connected ${socket.id}`);
-     });     
+
+         
+     }); 
+     
 
  }
 

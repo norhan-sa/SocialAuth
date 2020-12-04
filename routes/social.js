@@ -1,5 +1,6 @@
  const  router   =   require('express').Router();
  const  axios    =   require('axios');
+ const  Users    =   require('../config/db').Users;
 
 
  //ــــــــــــــF A C E B O O K   A U T H E T I C A T I O Nــــــــــ
@@ -9,15 +10,43 @@
    try{        
      let {fb_token}  =  req.body;
 
-     let is_exist = await axios.get(`https://graph.facebook.com/me?access_token=${fb_token}&fields=id,first_name,last_name,email,picture`); 
-     if(!is_exist) return res.status(400).send({msg:'facebook token is not valid' , data:null , status: 400});
+     let is_exist = await axios.get(`https://graph.facebook.com/me?access_token=${fb_token}&fields=id,first_name,last_name,email,picture`);
+     
+     let email = is_exist.data.email? is_exist.data.email : req.body.email;
+     let firstname = is_exist.data.first_name? is_exist.data.first_name : req.body.first_name;
+     let lastname = is_exist.data.last_name? is_exist.data.last_name : req.body.last_name;
+     let picture = is_exist.data.picture? is_exist.data.picture.data.url : null;
+     let fb_id = is_exist.data.id;
 
-     console.log(is_exist.data);
-     return res.send({msg:'successfully connected', data: is_exist.data});
+     let data = {
+      firstname: firstname,
+      lastname: lastname,
+      email: email,
+      picture: picture,
+      facebook_id: fb_id
+    }
+
+     let is_used_email = await Users.findOne({ where: { email: email} }); 
+     if(is_used_email) return res.status(400).send({msg:'هذا الايميل مستخدم بالفعل', data:null, status:400}); 
+     
+     let is_used_phone = await Users.findOne({where: {phone: phone} });
+     if(is_used_phone) return res.status(400).send({msg:'رقم الهاتف مستخدم بالفعل', data:null, status:400});
+
+     let is_reg = await Users.findOne({ where: {facebook_id: fb_id}});
+     if(is_reg){
+       data.id = is_reg.id;
+       data.phone = is_reg.phone;
+       return res.send({msg:'تم تسجيل الدخول بنجاح', data: data, status:200 });
+     }else{
+       let user  =  await Users.create(data); 
+       data.id = user.id;
+       data.phone = req.body.phone;
+       return res.send({msg:'تم تسجيل العضوية بنجاح', data: data, status:200 });      
+     }
 
    }catch(err){
      console.log(err.message);
-     return res.status(500).send({msg:'حدث خطأ ما', data: null , status: 500});       
+     return res.status(400).send({msg:'token not valid', data: null , status: 500});       
    } 
  });
 
@@ -32,11 +61,43 @@
     let {google_token}  =  req.body;
 
     let is_exist = await axios.get(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${google_token}`); 
-    if(!is_exist) return res.status(400).send({msg:'google token is not valid' , data:null , status: 400});
+    console.log(is_exist); 
+
+    let email = is_exist.email? is_exist.email : req.body.email;
+    let firstname = is_exist.first_name? is_exist.first_name : req.body.first_name;
+    let lastname = is_exist.last_name? is_exist.last_name : req.body.last_name;
+    let picture = is_exist.picture? is_exist.picture : null;
+    let google_id = is_exist.id;
+
+    let data = {
+      firstname: firstname,
+      lastname: lastname,
+      email: email,
+      picture: picture,
+      google_id: google_id
+    }
+
+    let is_used_email = await Users.findOne({ where: { email: email} }); 
+    if(is_used_email) return res.status(400).send({msg:'هذا الايميل مستخدم بالفعل', data:null, status:400}); 
     
-    console.log(is_exist.data);
-    return res.send({msg:'successfully connected', data: is_exist.data});
-    
+    let is_used_phone = await Users.findOne({where: {phone: phone} });
+    if(is_used_phone) return res.status(400).send({msg:'رقم الهاتف مستخدم بالفعل', data:null, status:400});
+
+    let is_reg = await Users.findOne({ where: {google_id: google_id}});
+    if(is_reg){
+
+      data.id = is_reg.id;
+      data.phone = is_reg.phone;
+      return res.send({msg:'تم تسجيل الدخول بنجاح', data: data, status:200 });
+
+    }else{
+
+     let user  =  await Users.create(data); 
+     data.id = user.id;
+     data.phone = req.body.phone;
+     return res.send({msg:'تم تسجيل العضوية بنجاح', data: data, status:200 }); 
+
+    }    
    }catch(err){
      console.log(err.message);
      return res.status(500).send({msg:'حدث خطأ ما', data: null , status: 500});       

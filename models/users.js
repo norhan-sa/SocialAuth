@@ -1,6 +1,6 @@
-const Sequelize = require('sequelize');
+ const Sequelize = require('sequelize');
 
-module.exports = (sequelize, type) => {
+ module.exports = (sequelize, type) => {
     return sequelize.define('users', {
         id: {
           type: type.INTEGER,
@@ -8,22 +8,37 @@ module.exports = (sequelize, type) => {
           autoIncrement: true
         },
         firstname: {
-          type: Sequelize.STRING(50)       
+          type: Sequelize.STRING(50),
+          allowNull: false,       
         },
         lastname: {
-          type: Sequelize.STRING(50)   
+          type: Sequelize.STRING(50),
+          allowNull: false,   
         },
         email: {
-          type: Sequelize.STRING(254)   
+          type: Sequelize.STRING(254),
+          allowNull: false,   
         },
         phone: {
-          type: Sequelize.STRING(13)        
+          type: Sequelize.STRING(13),
+          allowNull: false,        
         },
         picture: {
-          type: type.STRING        
+          type: type.STRING,
+          allowNull: true,        
+        },
+        facebook_id: {
+          type: type.STRING,
+          allowNull: true, 
+        },
+        google_id: {
+          type: type.STRING,
+          allowNull: true, 
         },
         reg_date: {
-          type: type.DATE        
+          type: type.DATE,
+          allowNull: false,
+          defaultValue: new Date()       
         }
     });
-}
+ }
