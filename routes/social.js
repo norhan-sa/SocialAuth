@@ -39,9 +39,9 @@
        data.phone = is_reg.phone;
        return res.send({msg:'تم تسجيل الدخول بنجاح', data: data, status:200 });
      }else{
+       data.phone = req.body.phone;
        let user  =  await Users.create(data); 
        data.id = user.id;
-       data.phone = req.body.phone;
        return res.send({msg:'تم تسجيل العضوية بنجاح', data: data, status:200 });      
      }
 
@@ -95,9 +95,10 @@
 
     }else{
 
+     data.phone = req.body.phone; 
      let user  =  await Users.create(data); 
      data.id = user.id;
-     data.phone = req.body.phone;
+  
      return res.send({msg:'تم تسجيل العضوية بنجاح', data: data, status:200 }); 
 
     }    
