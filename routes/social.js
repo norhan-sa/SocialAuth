@@ -64,11 +64,11 @@
     let is_exist = await axios.get(`https://www.googleapis.com/oauth2/v3/userinfo?access_token=${google_token}`); 
     console.log(is_exist); 
 
-    let email = is_exist.email? is_exist.email : req.body.email;
-    let firstname = is_exist.first_name? is_exist.given_name : req.body.first_name;
-    let lastname = is_exist.last_name? is_exist.family_name : req.body.last_name;
-    let picture = is_exist.picture? is_exist.picture : null;
-    let google_id = is_exist.id;
+    let email = is_exist.data.email? is_exist.data.email : req.body.email;
+    let firstname = is_exist.data.given_name? is_exist.given_name : req.body.first_name;
+    let lastname = is_exist.data.family_name? is_exist.family_name : req.body.last_name;
+    let picture = is_exist.data.picture? is_exist.data.picture : null;
+    let google_id = is_exist.data.sub;
 
     let data = {
       firstname: firstname,
