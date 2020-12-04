@@ -13,7 +13,7 @@
      if(!is_exist) return res.status(400).send({msg:'facebook token is not valid' , data:null , status: 400});
 
      console.log(is_exist.data);
-     return res.send({msg:'successfully connected'});
+     return res.send({msg:'successfully connected', data: is_exist.data});
 
    }catch(err){
      console.log(err.message);
