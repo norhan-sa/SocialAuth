@@ -80,9 +80,11 @@
     let is_used_email = await Users.findOne({ where: { email: email} }); 
     if(is_used_email) return res.status(400).send({msg:'هذا الايميل مستخدم بالفعل', data:null, status:400}); 
     
-    let is_used_phone = await Users.findOne({where: {phone: phone} });
-    if(is_used_phone) return res.status(400).send({msg:'رقم الهاتف مستخدم بالفعل', data:null, status:400});
-
+    if(req.body.phone){
+      let is_used_phone = await Users.findOne({where: {phone: phone} });
+      if(is_used_phone) return res.status(400).send({msg:'رقم الهاتف مستخدم بالفعل', data:null, status:400});
+    }
+    
     let is_reg = await Users.findOne({ where: {google_id: google_id}});
     if(is_reg){
 
