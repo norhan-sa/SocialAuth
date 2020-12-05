@@ -32,20 +32,19 @@
       facebook_id: fb_id
      }
 
-     let is_used_email = await Users.findOne({ where: { email: email} }); 
-     if(is_used_email) return res.status(400).send({msg:'هذا الايميل مستخدم بالفعل', data:null, status:400}); 
-    
-     if(req.body.phone){
-       let is_used_phone = await Users.findOne({where: {phone: req.body.phone} });
-       if(is_used_phone) return res.status(400).send({msg:'رقم الهاتف مستخدم بالفعل', data:null, status:400});
-     }
-
      let is_reg = await Users.findOne({ where: {facebook_id: fb_id}});
      if(is_reg){
        data.id = is_reg.id;
        data.phone = is_reg.phone;
        return res.send({msg:'تم تسجيل الدخول بنجاح', data: data, status:200 });
      }else{
+       let is_used_email = await Users.findOne({ where: { email: email} }); 
+       if(is_used_email) return res.status(400).send({msg:'هذا الايميل مستخدم بالفعل', data:null, status:400}); 
+      
+       if(req.body.phone){
+         let is_used_phone = await Users.findOne({where: {phone: req.body.phone} });
+         if(is_used_phone) return res.status(400).send({msg:'رقم الهاتف مستخدم بالفعل', data:null, status:400});
+       }
        data.phone = req.body.phone;
        let user  =  await Users.create(data); 
        data.id = user.id;
@@ -90,20 +89,21 @@
       google_id: google_id
     }
 
-    let is_used_email = await Users.findOne({ where: { email: email} }); 
-    if(is_used_email) return res.status(400).send({msg:'هذا الايميل مستخدم بالفعل', data:null, status:400}); 
-    
-    if(req.body.phone){
-      let is_used_phone = await Users.findOne({where: {phone: req.body.phone} });
-      if(is_used_phone) return res.status(400).send({msg:'رقم الهاتف مستخدم بالفعل', data:null, status:400});
-    }
-
     let is_reg = await Users.findOne({ where: {google_id: google_id}});
     if(is_reg){
       data.id = is_reg.id;
       data.phone = is_reg.phone;
       return res.send({msg:'تم تسجيل الدخول بنجاح', data: data, status:200 });
     }else{
+
+     let is_used_email = await Users.findOne({ where: { email: email} }); 
+     if(is_used_email) return res.status(400).send({msg:'هذا الايميل مستخدم بالفعل', data:null, status:400}); 
+      
+     if(req.body.phone){
+       let is_used_phone = await Users.findOne({where: {phone: req.body.phone} });
+       if(is_used_phone) return res.status(400).send({msg:'رقم الهاتف مستخدم بالفعل', data:null, status:400});
+     }
+  
      data.phone = req.body.phone; 
      let user  =  await Users.create(data); 
      data.id = user.id;
