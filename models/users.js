@@ -1,7 +1,7 @@
  const Sequelize = require('sequelize');
 
  module.exports = (sequelize, type) => {
-    return sequelize.define('users', {
+    return sequelize.define('Users', {
         id: {
           type: type.INTEGER,
           primaryKey: true,
