@@ -31,7 +31,9 @@
                 data: active_users, 
                 status: 200
             });
-         });
+         });         
+     }); 
+ }
 
  function getSocketId(id){
     for(let i = 0 ; i < active_users.length ; ++i){
@@ -43,11 +45,6 @@
         }
         return;
     } 
- }        
-         
-     }); 
-     
-
- }
+ } 
 
  module.exports = main_chat;
