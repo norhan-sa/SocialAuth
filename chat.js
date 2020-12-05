@@ -31,10 +31,16 @@
                 data: active_users, 
                 status: 200
             });
-         });         
+         });
+         
+         //  D I S C O N N E C T   F R O M   T H E   C H A T
+         socket.on('disconnect',function(){
+             console.log(`user disconnected: ${socket.id}`);
+         });
      }); 
  }
 
+ 
  function getSocketId(id){
     for(let i = 0 ; i < active_users.length ; ++i){
         if(active_users[i].id = id){
