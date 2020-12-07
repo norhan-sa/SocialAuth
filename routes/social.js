@@ -1,8 +1,9 @@
  const  router   =   require('express').Router();
  const  axios    =   require('axios');
  const  Users    =   require('../config/db').Users;
+ const jwt_token =   require('../config/jwt');
 
-
+ 
  //ــــــــــــــF A C E B O O K   A U T H E T I C A T I O Nــــــــــ
 
  router.post('/facebook', async(req,res)=>{
@@ -36,7 +37,8 @@
      if(is_reg){
        data.id = is_reg.id;
        data.phone = is_reg.phone;
-       return res.send({msg:'تم تسجيل الدخول بنجاح', data: data, status:200 });
+       let token = jwt_token({id: data.id});
+       return res.send({msg:'تم تسجيل الدخول بنجاح', data: data, token: token, status:200 });
      }else{
        let is_used_email = await Users.findOne({ where: { email: email} }); 
        if(is_used_email) return res.status(400).send({msg:'هذا الايميل مستخدم بالفعل', data:null, status:400}); 
@@ -48,7 +50,8 @@
        data.phone = req.body.phone;
        let user  =  await Users.create(data); 
        data.id = user.id;
-       return res.send({msg:'تم تسجيل العضوية بنجاح', data: data, status:200 });      
+       let token = jwt_token({id: data.id});
+       return res.send({msg:'تم تسجيل العضوية بنجاح', data: data, token: token, status:200 });      
      }
 
    }catch(err){
@@ -93,7 +96,8 @@
     if(is_reg){
       data.id = is_reg.id;
       data.phone = is_reg.phone;
-      return res.send({msg:'تم تسجيل الدخول بنجاح', data: data, status:200 });
+      let token = jwt_token({id: data.id});
+      return res.send({msg:'تم تسجيل الدخول بنجاح', data: data, token: token, status:200 });
     }else{
 
      let is_used_email = await Users.findOne({ where: { email: email} }); 
@@ -107,7 +111,8 @@
      data.phone = req.body.phone; 
      let user  =  await Users.create(data); 
      data.id = user.id;
-     return res.send({msg:'تم تسجيل العضوية بنجاح', data: data, status:200 }); 
+     let token = jwt_token({id: data.id});
+     return res.send({msg:'تم تسجيل العضوية بنجاح', data: data, token: token, status:200 }); 
     }    
     
    }catch(err){
