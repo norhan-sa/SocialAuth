@@ -4,7 +4,7 @@
  function main_chat(nsp){
       
      nsp.on('connection',function(socket){
-         console.log(`user connected ${socket.id}`);
+         console.log(`user connected ${socket.id} + ${socket.decoded_token}`);
  
          //  J O I N   T H E   C H A T (get user data from the db)
          socket.on('join chat', function(data){
