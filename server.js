@@ -14,13 +14,8 @@
     console.log(data);
     return callback(null, user.password == password);
   }
-});
+ });
  
-//  io.use(socketioJwt.authorize({
-//    secret: jwt_key,
-//    handshake: true,
-//    auth_header_required: true
-//  }));
 
  let chat_nsp = io.of('messages');
  main_chat(chat_nsp);

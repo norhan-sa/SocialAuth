@@ -1,6 +1,4 @@
  const   Users       =    require('./config/db').Users;
- const socketioJwt   =    require('socketio-jwt');
- let    jwt_key      =    process.env.JWT_SECRET; 
  let  active_users   =    [];
 
  function main_chat(nsp){
