@@ -7,6 +7,14 @@
  let   main_chat    =    require('./chat');
  let     port       =    process.env.PORT || 5000; 
  let   jwt_key      =    process.env.JWT_SECRET; 
+
+
+ require('socketio-auth')(io, {
+  authenticate: function (socket, data, callback) {
+    console.log(data);
+    return callback(null, user.password == password);
+  }
+});
  
 //  io.use(socketioJwt.authorize({
 //    secret: jwt_key,

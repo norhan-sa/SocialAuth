@@ -18,6 +18,7 @@
     "request": "^2.88.2",
     "sequelize": "^6.3.5",
     "socket.io": "^3.0.3",
+    "socketio-auth": "^0.1.1",
     "socketio-jwt": "^4.6.2"
   }
 }
