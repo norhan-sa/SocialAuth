@@ -8,7 +8,7 @@
    nsp.on('connection', socketioJwt.authorize({
       secret: jwt_key,
       timeout: 15000
-   })).on('authenticated', function(socket) {
+   })).on('authenticated', function() {
       //this socket is authenticated, we are good to handle more events from it.
       console.log(`Hello! ${socket.decoded_token}`);
     });
