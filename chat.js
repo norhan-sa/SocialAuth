@@ -9,12 +9,17 @@
    nsp.use(function(socket, next){
       if (socket.handshake.query && socket.handshake.query.token){
         jwt.verify(socket.handshake.query.token, JWT_SEC , function(err, decoded) {
-          if (err) return next(new Error('Authentication error'));
+          if (err){
+              console.log('ERROR1');
+              return next(new Error('Authentication error'));
+         }
+          console.log('SUCCESS');
           socket.decoded = decoded;
           next();
         });
       }
       else {
+        console.log('ERROR2'); 
         next(new Error('Authentication error'));
       }    
     }).on('connection',function(socket){
