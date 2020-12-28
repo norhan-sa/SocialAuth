@@ -7,6 +7,7 @@
  function main_chat(nsp){
 
    nsp.use(function(socket, next){
+      console.log(socket.handshake);
       if (socket.handshake.query && socket.handshake.query.token){
         jwt.verify(socket.handshake.query.token, JWT_SEC , function(err, decoded) {
           if (err){
