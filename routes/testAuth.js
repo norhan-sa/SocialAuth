@@ -31,12 +31,14 @@
              password: hashed_password
    });
 
+   let token =  jwt_token({id: user.id});
+
    return res.send({msg: 'تم تسجيل العضوية بنجاح', data: {
           firstname: firstname,
           lastname: lastname,
           email: email,
           phone: phone
-    }, status: 200
+    }, token: token, status: 200
  });
 
   }catch(err){
@@ -66,12 +68,14 @@
    
      let user = is_used_email;  
 
+     let token = jwt_token({id: user.id});
+
    return res.send({msg: 'تم تسجيل الدخول بنجاح', data: {
           firstname: user.firstname,
           lastname: user.lastname,
           email: user.email,
           phone: user.phone
-    }, status: 200
+    }, token: token, status: 200
  });
 
   }catch(err){
