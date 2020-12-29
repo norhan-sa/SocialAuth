@@ -1,4 +1,5 @@
  require('dotenv').config();
+
  const   Users       =    require('./config/db').Users;
  const   JWT_SEC     =    process.env.JWT_SECRET;
  const    jwt        =    require('jsonwebtoken');
@@ -6,95 +7,64 @@
 
  function main_chat(nsp){
 
-   nsp.use(function(socket, next){
-      console.log(socket.handshake);
-      if (socket.handshake.query && socket.handshake.query.token){
-        jwt.verify(socket.handshake.query.token, JWT_SEC , function(err, decoded) {
-          if (err){
-              console.log('ERROR1');
-              return next(new Error('Authentication error'));
-         }
-          console.log('SUCCESS');
-          socket.decoded = decoded;
-          next();
-        });
-      }
-      else {
-        console.log('ERROR2'); 
-        next(new Error('Authentication error'));
-      }    
-    }).on('connection',function(socket){
-         console.log(`user connected ${socket.id} `);
- 
-         // //  J O I N   T H E   C H A T (get user data from the db)
-         // socket.on('join chat', function(data){
-         //    let is_exist = getSocketId(data.id);
-         //    if(is_exist){
-         //       active_users[is_exist.index].socket.push(socket.id);
-         //       socket.emit('join chat',{msg: 'join the chat with another device', data: active_users[is_exist.index], status: 200});
-         //    }else 
-         //    Users.findOne({where: {id: data.id}}).then((user)=>{
-         //     if(user){  
-         //       let data = {
-         //          id: user.id, 
-         //          firstname: user.firstname,
-         //          lastname: user.lastname, 
-         //          socket: [socket.id],
-         //          picture: user.picture,
-         //          active: true
-         //       }
-         //       active_users.push(data);
-         //       socket.emit('join chat',{msg:'you join the chat successfully', data: data, status:200});
-         //       socket.broadcast.emit(`active users`,data);
-         //     }else{
-         //       socket.emit('join chat',{msg:'you are not registered', data: null, status:400});  
-         //     } 
-         //    });
-         // });
-
-         // //  G E T   A C T I V E   U S E R S 
-         // socket.on(`active users`,function(data){
-         //    socket.emit(`active users`, {
-         //        msg:'successfully get active users', 
-         //        data: getActiveUsers(data.id), 
-         //        status: 200
-         //    });
-         // });
-         
-         //  D I S C O N N E C T   F R O M   T H E   C H A T
-         socket.on('disconnect',function(){
-             console.log(`user disconnected: ${socket.id}`);
-         });
-
-     }); 
- }
-
-
- function getSocketId(id){
-    for(let i = 0 ; i < active_users.length ; ++i){
-        if(active_users[i].id = id){
-           return {
-              data: active_users[i],
-              index: i
-           } 
+   // C H A T   C O N N E C T I O N   A U T H E N T I C A T I O N  (With JWT) 
+   nsp.use( function(socket, next){
+    if (socket.handshake.query && socket.handshake.query.token){
+      jwt.verify(socket.handshake.query.token, JWT_SEC, function(err, decoded) {
+        if (err){ 
+          console.log(`ERROR : ${err.message}`);  
+          return next(new Error('Authentication error'));
         }
-    } 
-    return;
- } 
+        console.log('successfully connected to the chat');
+        Users.findOne({ where: {id: decoded.id}}).then(res=>{
+           socket.data = {
+               id: res.id,
+               lastname: res.lastname,
+               firstname: res.firstname,
+               picture: res.picture
+           };
+           next();
+        }).catch(err=>{
+           console.log(err.stack);
+        });
+        
+      });
+    }
+    else {
+    console.log('chat connection failed'); 
+    next(new Error('Authentication error'));
+    }    
+  }).on('connection',function(socket){
 
- function getActiveUsers(id){
-    let users = [] 
-    for(let i = 0 ; i < active_users.length ; ++i){
-       if(active_users[i].id === id) continue; 
-       users.push({
-          firstname: active_users[i].firstname,
-          lastname: active_users[i].lastname,
-          email: active_users[i].email,
-          picture: active_users[i].picture,
-          id: active_users[i].id
-       });
-    } 
-    return users;
+    console.log(`U S E R  C O N N E C T E D : ${socket.id} `);
+    console.log(socket.data);
+
+    //  G E T   A L L   A C T I V E   U S E R S 
+    socket.emit('active users', active_users(nsp, socket.id));
+
+    //  N O T I F Y   U S E R S   F O R   N E W   C O N N E C T I O N
+    socket.broadcast.emit('active users', socket.data);
+
+    //  P R I V A T E   C H A T   M E S S A G E S 
+    socket.on('private message',()=>{
+
+    });
+
+    //  D I S C O N N E C T   F R O M   T H E   C H A T
+    socket.on('disconnect',function(){
+        console.log(`U S E R  D I S C O N N E C T E D : ${socket.id} `);
+    });
+
+   }); 
  }
 
- module.exports = main_chat;
+ // F I N D  A L L  A C T I V E  U S E R S
+ function active_users(nsp , id){
+    var clients = nsp.clients();
+    let active_users = clients.filter(client => {
+        return client.id !== id;
+    });
+    return active_users;
+ }
+
+ exports.main_chat = main_chat;
