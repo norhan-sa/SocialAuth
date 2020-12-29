@@ -61,7 +61,7 @@
  // F I N D  A L L  A C T I V E  U S E R S
  function activeUsers(nsp , id){
     var clients = nsp.clients();
-    if(!Array.isArray(clients)) return clients.data;
+    if(!Array.isArray(clients)) return [];
     let activeusers = clients.filter(client => {
         return client.id !== id;
     });
