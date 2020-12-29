@@ -39,6 +39,8 @@
     console.log(`U S E R  C O N N E C T E D : ${socket.id} `);
     console.log(socket.data);
 
+    console.log(findById(nsp ,3));
+
     //  G E T   A L L   A C T I V E   U S E R S 
     socket.emit('active users', activeUsers(nsp, socket.id));
 
@@ -50,17 +52,11 @@
         let {toID , msg} = data;
         let from  = socket.data.id;
 
-        let to_user_data = findById(nsp , toID);
-        console.log(to_user_data);
+        let to_socket_id = findById(nsp , toID).id;
+        console.log(to_socket_id);
+        socket.to(to_socket_id).emit('private message',{msg: msg, from: from, with: from});
+        socket.emit('private message',{msg: msg, from: from, with: toID});
 
-        if(to_user_data){
-          let to_socket_id = to_user_data.id;
-          console.log(to_socket_id)
-          socket.to(to_socket_id).emit('private message',{msg: msg, from: from, with: from});
-          socket.emit('private message',{msg: msg, from: from, with: toID});
-        }else{
-            console.log('shit');
-        }
     });
 
     //  D I S C O N N E C T   F R O M   T H E   C H A T
@@ -73,9 +69,14 @@
 
  // F I N D  A L L  A C T I V E  U S E R S
  function activeUsers(nsp , id){
-    var clients = nsp.clients();
-    if(!Array.isArray(clients)) return [];
-    let activeusers = clients.filter(client => {
+
+    var clients = nsp.clients().connected;
+    var array = Object.keys(clients)
+    .map(function(key) {
+        return clients[key];
+    });
+
+    let activeusers = array.filter(client => {
         return client.id !== id;
     });
     return activeusers;
@@ -83,12 +84,16 @@
 
  function findById(nsp ,id){
 
-   var clients = nsp.clients();
-   console.log(clients);
-   if(!Array.isArray(clients)) return;
-   for(let i = 0 ; i < clients.length ; ++i){
-       if(clients[i].data.id === id) 
-         return clients[i];
+    var clients = nsp.clients().connected;
+    var array = Object.keys(clients)
+    .map(function(key) {
+        return clients[key];
+    });
+
+    console.log(array.length);
+   for(let i = 0 ; i < array.length ; ++i){
+       if(array[i].data.id === id) 
+         return array[i];
    }
      return;
  }
