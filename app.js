@@ -1,6 +1,7 @@
 
  const  express  =  require('express');
  const  social   =  require('./routes/social');
+ const  local    =  require('./routes/testAuth');
  const   cors    =  require('cors');
  const    app    =  express();
  
@@ -20,7 +21,8 @@
  });
 
  app.use('/',social);
-
+ app.use('/', local);
+ 
  app.get('/',(req,res)=>{
    return res.send('We Are Connected');
  });

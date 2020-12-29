@@ -46,7 +46,12 @@
     socket.broadcast.emit('active users', socket.data);
 
     //  P R I V A T E   C H A T   M E S S A G E S 
-    socket.on('private message',()=>{
+    socket.on('private message',(data)=>{
+        let {toID , msg} = data;
+        let from  = socket.data.id;
+
+        socket.to(toID).emit({msg: msg, from: from, with: from});
+        socket.emit({msg: msg, from: from, with: toID});
 
     });
 

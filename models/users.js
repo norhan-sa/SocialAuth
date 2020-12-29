@@ -39,6 +39,10 @@
           type: type.DATE,
           allowNull: false,
           defaultValue: new Date()       
+        },
+        password: {
+          type: type.STRING,
+          allowNull: true
         }
     });
  }
