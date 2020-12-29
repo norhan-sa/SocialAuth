@@ -11,7 +11,9 @@
    nsp.use( function(socket, next){
     if (socket.handshake.query ){
       try{
+        console.log(socket.handshake.query); 
          let query_data = JSON.parse(socket.handshake.query);
+         console.log(query_data);
          if(!query_data.token){
              console.log('chat connection failed : there is no token'); 
              next(new Error('Authentication error'));
