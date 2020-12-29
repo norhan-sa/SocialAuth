@@ -15,7 +15,7 @@
  const Group_members =   group_members_model(sequelize, Sequelize); 
  const   Messages    =   messages_model(sequelize, Sequelize);
 
- sequelize.sync({ force: true })
+ sequelize.sync({ force: false })
   .then(() => {
     console.log(`Database & tables created!`)
   });
