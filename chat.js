@@ -50,8 +50,8 @@
         let {toID , msg} = data;
         let from  = socket.data.id;
 
-        let to_socket_id = findById(nsp , toID);
-
+        let to_socket_id = findById(nsp , toID).id;
+        console.log(to_socket_id);
         socket.to(to_socket_id).emit('private message',{msg: msg, from: from, with: from});
         socket.emit('private message',{msg: msg, from: from, with: toID});
 
