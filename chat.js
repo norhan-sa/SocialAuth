@@ -50,8 +50,8 @@
         let {toID , msg} = data;
         let from  = socket.data.id;
 
-        socket.to(toID).emit({msg: msg, from: from, with: from});
-        socket.emit({msg: msg, from: from, with: toID});
+        socket.to(toID).emit('private message',{msg: msg, from: from, with: from});
+        socket.emit('private message',{msg: msg, from: from, with: toID});
 
     });
 
