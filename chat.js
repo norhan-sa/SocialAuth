@@ -59,7 +59,7 @@
           socket.to(to_socket_id).emit('private message',{msg: msg, from: from, with: from});
           socket.emit('private message',{msg: msg, from: from, with: toID});
         }else{
-            print
+            console.log('shit');
         }
     });
 
