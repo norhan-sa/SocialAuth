@@ -41,6 +41,7 @@
 
     //  G E T   A L L   A C T I V E   U S E R S 
     socket.emit('active users', activeUsers(nsp, socket.id));
+    console.log('rrrrrrrr');
 
     //  N O T I F Y   U S E R S   F O R   N E W   C O N N E C T I O N
     socket.broadcast.emit('active users', socket.data);
@@ -50,11 +51,12 @@
         let {toID , msg} = data;
         let from  = socket.data.id;
 
-        let to_socket_id = findById(nsp , toID).id;
-        console.log(to_socket_id);
+        let to_user_data = findById(nsp , toID);
+        if(to_user_data){
+        let to_socket_id = to_user_data.id;
         socket.to(to_socket_id).emit('private message',{msg: msg, from: from, with: from});
+        }
         socket.emit('private message',{msg: msg, from: from, with: toID});
-
     });
 
     //  D I S C O N N E C T   F R O M   T H E   C H A T
@@ -74,9 +76,14 @@
         return clients[key];
     });
 
-    let activeusers = array.filter(client => {
-        return client.id !== id;
-    });
+    let activeusers = [];
+
+    for(let i = 0 ; i < array.length ; ++i){
+        if(array[i].id == id)
+        continue;
+        else activeusers.push(array[i].data);
+    }
+    console.log(activeusers);
     return activeusers;
  }
 
@@ -87,8 +94,7 @@
     .map(function(key) {
         return clients[key];
     });
-
-    console.log(array.length);
+   
    for(let i = 0 ; i < array.length ; ++i){
        if(array[i].data.id === id) 
          return array[i];
