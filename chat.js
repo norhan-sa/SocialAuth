@@ -9,9 +9,8 @@
 
    // C H A T   C O N N E C T I O N   A U T H E N T I C A T I O N  (With JWT) 
    nsp.use( function(socket, next){
-    if (socket.handshake.query){
-        console.log(socket.handshake.query);
-      jwt.verify(socket.handshake.query, JWT_SEC, function(err, decoded) {
+    if (socket.handshake.query && socket.handshake.query.token){
+      jwt.verify(socket.handshake.query.token, JWT_SEC, function(err, decoded) {
         if (err){ 
           console.log(`ERROR : ${err.message}`);  
           return next(new Error('Authentication error'));
@@ -32,7 +31,7 @@
       });
     }
     else {
-    console.log('chat connection failed : no query data'); 
+    console.log('chat connection failed : No query or token'); 
     next(new Error('Authentication error'));
     }    
   }).on('connection',function(socket){
