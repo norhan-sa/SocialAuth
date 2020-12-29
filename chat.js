@@ -50,7 +50,7 @@
         let {toID , msg} = data;
         let from  = socket.data.id;
 
-        let to_socket_id = findById(toID);
+        let to_socket_id = findById(nsp , toID);
 
         socket.to(to_socket_id).emit('private message',{msg: msg, from: from, with: from});
         socket.emit('private message',{msg: msg, from: from, with: toID});
@@ -75,7 +75,7 @@
     return activeusers;
  }
 
- function findById(id){
+ function findById(nsp ,id){
 
    var clients = nsp.clients();
    if(!Array.isArray(clients)) return;
