@@ -50,11 +50,17 @@
         let {toID , msg} = data;
         let from  = socket.data.id;
 
-        let to_socket_id = findById(nsp , toID).id;
-        console.log(to_socket_id);
-        socket.to(to_socket_id).emit('private message',{msg: msg, from: from, with: from});
-        socket.emit('private message',{msg: msg, from: from, with: toID});
+        let to_user_data = findById(nsp , toID);
+        console.log(to_user_data);
 
+        if(to_user_data){
+          let to_socket_id = to_user_data.id;
+          console.log(to_socket_id)
+          socket.to(to_socket_id).emit('private message',{msg: msg, from: from, with: from});
+          socket.emit('private message',{msg: msg, from: from, with: toID});
+        }else{
+            print
+        }
     });
 
     //  D I S C O N N E C T   F R O M   T H E   C H A T
