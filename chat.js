@@ -40,7 +40,7 @@
     console.log(socket.data);
 
     //  G E T   A L L   A C T I V E   U S E R S 
-    socket.emit('active users', active_users(nsp, socket.id));
+    socket.emit('active users', activeUsers(nsp, socket.id));
 
     //  N O T I F Y   U S E R S   F O R   N E W   C O N N E C T I O N
     socket.broadcast.emit('active users', socket.data);
@@ -59,12 +59,13 @@
  }
 
  // F I N D  A L L  A C T I V E  U S E R S
- function active_users(nsp , id){
+ function activeUsers(nsp , id){
     var clients = nsp.clients();
-    let active_users = clients.filter(client => {
+    if(!Array.isArray(clients)) return clients.data;
+    let activeusers = clients.filter(client => {
         return client.id !== id;
     });
-    return active_users;
+    return activeusers;
  }
 
  exports.main_chat = main_chat;
