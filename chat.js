@@ -50,7 +50,9 @@
         let {toID , msg} = data;
         let from  = socket.data.id;
 
-        socket.to(toID).emit('private message',{msg: msg, from: from, with: from});
+        let to_socket_id = findById(toID);
+
+        socket.to(to_socket_id).emit('private message',{msg: msg, from: from, with: from});
         socket.emit('private message',{msg: msg, from: from, with: toID});
 
     });
@@ -71,6 +73,17 @@
         return client.id !== id;
     });
     return activeusers;
+ }
+
+ function findById(id){
+
+   var clients = nsp.clients();
+   if(!Array.isArray(clients)) return;
+   for(let i = 0 ; i < clients.length ; ++i){
+       if(clients[i].data.id === id) 
+         return clients[i];
+   }
+     return;
  }
 
  exports.main_chat = main_chat;
