@@ -39,8 +39,6 @@
     console.log(`U S E R  C O N N E C T E D : ${socket.id} `);
     console.log(socket.data);
 
-    console.log(findById(nsp ,3));
-
     //  G E T   A L L   A C T I V E   U S E R S 
     socket.emit('active users', activeUsers(nsp, socket.id));
 
