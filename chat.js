@@ -84,6 +84,7 @@
  function findById(nsp ,id){
 
    var clients = nsp.clients();
+   console.log(clients);
    if(!Array.isArray(clients)) return;
    for(let i = 0 ; i < clients.length ; ++i){
        if(clients[i].data.id === id) 
