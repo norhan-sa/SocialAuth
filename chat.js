@@ -10,10 +10,14 @@
    // C H A T   C O N N E C T I O N   A U T H E N T I C A T I O N  (With JWT) 
    nsp.use( function(socket, next){
     if (socket.handshake.query ){
-      let query_data = JSON.parse(socket.handshake.query);
-      if(!query_data.token){
-         console.log('chat connection failed : there is no token'); 
-         next(new Error('Authentication error'));
+      try{
+        let query_data = JSON.parse(socket.handshake.query);
+        if(!query_data.token){
+            console.log('chat connection failed : there is no token'); 
+            next(new Error('Authentication error'));
+        }  
+      }catch(err){
+         console.log('JSON parsing error : '+err.message); 
       }   
       jwt.verify(socket.handshake.query.token, JWT_SEC, function(err, decoded) {
         if (err){ 
